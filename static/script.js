@@ -257,7 +257,7 @@ window.finalizarPedido = async function () {
             mensagem += `📝 *Observação:* ${observacao}\n`
         }
 
-        const telefone = "82999607423"
+        const telefone = "5582999607423"
         const mensagemFormatada = encodeURIComponent(mensagem)
 
         window.open(`https://wa.me/${telefone}?text=${mensagemFormatada}`, "_blank")
