@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Admin Premium</title>
+<link rel="stylesheet" href="/static/admin.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<a href="/admin/pedidos"
+class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl text-sm shadow-lg transition">
+📦 Ver Pedidos
+</a>
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">🍕 Pizzaria</h2>
+
+        <nav>
+            <a class="active">Dashboard</a>
+            <a href="/logout">Sair</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+            <h1>Painel Administrativo</h1>
+        </header>
+
+        <!-- DASHBOARD CARDS -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Total Produtos</p>
+                <h2>{{ produtos|length }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Último Produto</p>
+                <h2>
+                    {% if produtos %}
+                        {{ produtos[-1].nome }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </h2>
+            </div>
+
+        </section>
+
+        <!-- FORM NOVO PRODUTO -->
+        <section class="card">
+            <h2>Adicionar Produto</h2>
+
+            <form action="/admin/novo" method="POST" enctype="multipart/form-data" class="form-grid">
+
+                <input type="text" name="nome" placeholder="Nome do produto" required>
+
+                <input type="number" step="0.01" name="preco" placeholder="Preço" required>
+
+                <input type="text" name="categoria" placeholder="Categoria" required>
+
+                <input type="file" name="imagem" required>
+
+                <button type="submit" class="btn-primary">
+                    Adicionar Produto
+                </button>
+
+            </form>
+        </section>
+
+        <!-- PRODUTOS -->
+        <section class="products">
+
+            {% for produto in produtos %}
+            <div class="product-card">
+
+                <img src="/static/uploads/{{ produto.imagem }}" alt="">
+
+                <div class="product-info">
+                    <h3>{{ produto.nome }}</h3>
+                    <p>R$ {{ produto.preco }}</p>
+                    <span>{{ produto.categoria }}</span>
+                </div>
+
+                <div class="actions">
+                    <button onclick="toggleEdit({{ produto.id }})" class="btn-edit">
+                        Editar
+                    </button>
+
+                    <a href="/admin/remover/{{ produto.id }}">
+                        <button class="btn-delete">Remover</button>
+                    </a>
+                </div>
+
+                <!-- EDIT FORM -->
+                <div id="edit-{{ produto.id }}" class="edit-box">
+                    <form action="/admin/editar/{{ produto.id }}" method="POST" enctype="multipart/form-data">
+
+                        <input type="text" name="nome" value="{{ produto.nome }}" required>
+                        <input type="number" step="0.01" name="preco" value="{{ produto.preco }}" required>
+                        <input type="text" name="categoria" value="{{ produto.categoria }}" required>
+                        <input type="file" name="imagem">
+
+                        <button class="btn-primary">
+                            Salvar Alterações
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+function toggleEdit(id){
+    const el = document.getElementById("edit-" + id)
+    el.classList.toggle("active")
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+[
+    {
+        "id": 1,
+        "nome": "Pizza Charque + Frango com Catupiry",
+        "descricao": "OASNIANFONSINCOSDANCOINDVCOIASNFIANOFN",
+        "preco": 39.99,
+        "categoria": "Pizzas",
+        "promocao": false,
+        "imagem": "Captura_de_tela_2026-02-04_121242.png"
+    },
+    {
+        "id": 2,
+        "nome": "X-calabresa",
+        "descricao": "P\u00e3o brioche, 2 carnes, alface, tomate, cebola, frango e calabresa",
+        "preco": 19.99,
+        "categoria": "Hamburguer",
+        "promocao": false,
+        "imagem": "Captura_de_tela_2026-03-02_093757.png"
+    },
+    {
+        "id": 3,
+        "nome": "Pizza Brotinho Frango",
+        "preco": 10.9,
+        "categoria": "PROMO\u00c7\u00d5ES",
+        "imagem": "Captura_de_tela_2024-08-29_133855.png"
+    },
+    {
+        "id": 4,
+        "nome": "Pizza Brotinho Frango",
+        "preco": 10.9,
+        "categoria": "PROMO\u00c7\u00d5ES",
+        "imagem": "Captura_de_Tela_4.png"
+    },
+    {
+        "id": 5,
+        "nome": "Pizza de Queijo",
+        "preco": 89.99,
+        "categoria": "Pizzas",
+        "imagem": "Captura_de_Tela_35.png"
+    }
+]

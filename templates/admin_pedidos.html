@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Painel Administrativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-zinc-950 via-black to-zinc-900 text-white min-h-screen">
+
+<!-- NAVBAR -->
+<header class="bg-zinc-900/80 backdrop-blur-md border-b border-zinc-800 shadow-xl p-5 flex justify-between items-center">
+
+    <h1 class="text-2xl font-bold text-red-500">
+        🍕 Painel Administrativo
+    </h1>
+
+    <div class="flex items-center gap-6">
+
+        <div class="relative">
+            <span class="text-sm text-gray-400">Pedidos</span>
+            <span id="badgePedidos"
+                class="absolute -top-2 -right-4 bg-red-500 text-xs px-2 py-1 rounded-full">
+                0
+            </span>
+        </div>
+
+        <a href="/logout"
+           class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl text-sm shadow-lg">
+            Sair
+        </a>
+
+    </div>
+
+</header>
+
+<form action="/admin/limpar_pedidos" method="POST"
+      onsubmit="return confirm('Tem certeza que deseja apagar TODOS os pedidos?')">
+
+    <button type="submit"
+        class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white font-semibold mb-4">
+        🗑 Limpar Todos os Pedidos
+    </button>
+
+</form>
+<!-- CONTEÚDO -->
+<div class="p-10 max-w-6xl mx-auto space-y-8">
+
+{% for bloco in pedidos_completos %}
+
+{% set pedido = bloco.pedido %}
+{% set itens = bloco.itens %}
+
+<div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-2xl hover:shadow-red-500/10 transition">
+
+    <div class="flex justify-between items-start mb-6">
+
+        <div>
+            <h2 class="text-xl font-bold">
+                Pedido #{{ pedido.id }}
+            </h2>
+            <p class="text-gray-500 text-sm">
+                {{ pedido.data }}
+            </p>
+        </div>
+
+        <div class="text-right">
+            <p class="text-2xl font-bold text-red-500">
+                R$ {{ pedido.total }}
+            </p>
+
+            <span class="
+                {% if pedido.status == 'Pendente' %} bg-yellow-500/20 text-yellow-400
+                {% elif pedido.status == 'Enviado' %} bg-blue-500/20 text-blue-400
+                {% else %} bg-green-500/20 text-green-400
+                {% endif %}
+                px-3 py-1 rounded-full text-xs font-semibold">
+                {{ pedido.status }}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 text-sm text-gray-300 mb-6">
+        <div>
+            <p><strong>Endereço:</strong> {{ pedido.endereco }}</p>
+            <p><strong>Pagamento:</strong> {{ pedido.pagamento }}</p>
+            {% if pedido.observacao %}
+            <p><strong>Obs:</strong> {{ pedido.observacao }}</p>
+            {% endif %}
+        </div>
+
+        <div class="bg-black/40 p-4 rounded-2xl">
+            <p class="font-semibold text-gray-400 mb-3">Itens</p>
+            {% for item in itens %}
+            <div class="flex justify-between">
+                <span>Produto ID: {{ item.produto_id }}</span>
+                <span>R$ {{ item.preco }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <a href="/admin/alterar_status/{{ pedido.id }}"
+       class="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-xl text-sm shadow-lg transition">
+        Alterar Status
+    </a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<!-- SOM DE NOTIFICAÇÃO -->
+<audio id="notificationSound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+let ultimoTotal = 0
+
+async function verificarNovosPedidos(){
+
+    const res = await fetch("/admin/total_pedidos")
+    const data = await res.json()
+
+    document.getElementById("badgePedidos").innerText = data.total
+
+    if(ultimoTotal !== 0 && data.total > ultimoTotal){
+
+        // 🔔 Tocar som
+        document.getElementById("notificationSound").play()
+
+        // 🔥 Alerta elegante
+        alert("🔔 Novo pedido recebido!")
+
+        location.reload()
+    }
+
+    ultimoTotal = data.total
+}
+
+setInterval(verificarNovosPedidos, 4000)
+
+</script>
+
+</body>
+</html>
