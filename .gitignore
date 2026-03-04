@@ -1,0 +1,17 @@
+# Banco de dados
+*.db
+banco.db
+database.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+env/
+venv/
+
+# Variáveis de ambiente
+.env
+
+# Arquivos do sistema
+.DS_Store
