@@ -3,10 +3,13 @@ import os
 from werkzeug.utils import secure_filename
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
 app = Flask(__name__)
 
 
-app.secret_key = "pizzaria_secret_key122409872140219"
+
+# ← MUDE ISSO:
+app.secret_key = os.getenv("SECRET_KEY", "dev_key_default")
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -102,7 +105,10 @@ def login():
         usuario = request.form.get("usuario")
         senha = request.form.get("senha")
 
-        if usuario == "admin" and senha == "1234":
+        admin_user = os.getenv("ADMIN_USER", "admin")
+        admin_pass = os.getenv("ADMIN_PASSWORD", "1234")
+
+        if usuario == admin_user and senha == admin_pass:
             session["admin"] = True
             return redirect("/admin")
         else:
@@ -382,6 +388,9 @@ def limpar_pedidos():
 
     return redirect("/admin/pedidos")
 
+# Crie as tabelas quando a app iniciar (não só no __main__)
+criar_tabelas()
+
 if __name__ == "__main__":
-    criar_tabelas()
-    app.run(debug=False)
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
